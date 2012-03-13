@@ -1,11 +1,21 @@
 #Dependecies
+$LOAD_PATH << './'
+require 'csv'
+require 'attendee'
+require 'help'
+require 'search'
+
 #Class Definition
 
 class EventReporterCLI
+  class << self
+    attr_accessor :attendees
+  end
 
   def self.run
     puts "welcome!"
     command = ""
+    #load_this("event_attendees.csv")
     
     while command != "quit"
       printf "enter command: "
@@ -14,6 +24,9 @@ class EventReporterCLI
       parts = input.split(" ")
       command = parts[0].downcase
       second_command = parts[1]
+      @input = input
+      @second_command = second_command
+      @attribute = parts[2]
 
       case command
         when 'quit' then puts "Adios!"
@@ -39,19 +52,35 @@ class EventReporterCLI
   end
 
   def self.load_this(filename)
-    puts "You loaded #{filename}!"
+    # This works - I just want to test with a small amount of data for a bit
+    # puts "You loaded #{filename}!"
+    # file = CSV.open(filename, :headers => true, :header_converters => :symbol)
+    # file.rewind
+    # attendees = file.collect { |line| Attendee.new(line) }
+    # puts attendees.inspect
   end
 
   def self.help_list
-    puts "here are all the commands"
+  
+    puts "Here's a list of the commands:"
+    puts "load <filename>" 
+    puts "help"
+    puts "help <command name>" 
+    puts "find <attribute> <criteria>"
+    puts "queue count"
+    puts "queue clear"
+    puts "queue print"
+    puts "queue print by <attribute>"
+    puts "queue save to <filename>"
+
   end
 
   def self.help(command)
-    puts "here's the info for the #{command} command"
+    Help.for(@input)
   end
 
   def self.find(attribute, criteria)
-    puts "I'm putting all #{criteria}s with #{attribute} in the queue"
+    Search.for(@attribute, @second_command)
   end
 
   def self.queue_print_by(attribute)
@@ -72,14 +101,6 @@ class EventReporterCLI
     else 
       puts "Invalid queue command."
     end
-            #     when 'count' then queue_count
-        #     when 'clear' then queue_clear
-        #     when 'save' then queue_save_to(filename)
-        #     when 'print'
-        #         if filename.nil?
-        #          print
-        #         else
-        #          print(filename)
   end
 end
 
