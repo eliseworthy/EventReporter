@@ -1,5 +1,3 @@
-require 'ostruct'
-
 # class ZipCode
 #   def self.clean(dirty_zipcode)
 #     dirty_zipcode.to_s.rjust(5, '0')
@@ -16,22 +14,31 @@ require 'ostruct'
 #   end
 # end
 
-class Attendee < OpenStruct
-  #OpenStruct allows us to do regular method calls (we can remove the hash keys)
+class Attendee 
+
+  attr_accessor :first_name, :last_name, :email, :zipcode, :city, :state, :address
+
   def initialize(attributes)
-    super
+    self.first_name = attributes[:first_name]
+    self.last_name = attributes[:last_name]
+    self.email = attributes[:email]
+    self.zipcode = attributes[:zipcode]
+    self.city = attributes[:city]
+    self.state = attributes[:state]
+    self.address = attributes[:address]
   end
 
-  def full_name
-    [first_name, last_name].join(" ") 
-  end  
+  #need to put a data cleaner here
+  # def full_name
+  #   [first_name, last_name].join(" ") 
+  # end  
 
-  def zipcode
-    ZipCode.clean(super)
-  end
+  # def zipcode
+  #   ZipCode.clean(super)
+  # end
 
-  def phone_number
-    PhoneNumber.new(homephone)
-  end
+  # def phone_number
+  #   PhoneNumber.new(homephone)
+  # end
 
 end

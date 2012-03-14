@@ -7,6 +7,8 @@ require 'help'
 require 'search'
 require 'event_data_parser'
 require 'queue'
+require 'ruby-debug'
+
 
 #Class Definition
 
@@ -22,8 +24,9 @@ class EventReporterCLI
                   "queue save to" => "exports queue to a CSV", 
                   "find" => "load the queue with matching records"}
 
-  class << self
-    attr_accessor :attendees
+  def initialize
+    self.attendees = []
+    self.queue = Queue.new
   end
 
   def self.prompt
@@ -32,7 +35,7 @@ class EventReporterCLI
   end
 
   def self.parse_user_inputs(inputs)
-    [ input.first.downcase, inputs[1..-1] ]
+    [ inputs.first.downcase, inputs[1..-1] ]
   end
 
   def self.valid_parameters_for_load?(parameters)
@@ -67,7 +70,7 @@ class EventReporterCLI
     elsif command == "help" && valid_parameters_for_help?(parameters)
         Help.for(parameters)
     elsif command == "find" && Search.valid_parameters?(parameters)
-        Search.for(parameters)
+        Search.for(parameters, @attendees)
     else
       error_message_for(command)
     end
@@ -76,7 +79,7 @@ class EventReporterCLI
   def self.run
     puts "welcome!"
     command = ""
-    load_attendees("event_attendees.csv")
+    @attendees = EventDataParser.load("event_attendees.csv")
 
     until EXIT_COMMANDS.include?(command)
       inputs = prompt
@@ -88,13 +91,6 @@ class EventReporterCLI
         puts "No command entered."
       end
     end
-  end
-
-  def self.load_attendees(filename)
-    file = CSV.open(filename, :headers => true, :header_converters => :symbol)
-    file.rewind
-    attendees = file.collect { |line| Attendee.new(line) }
-    puts attendees.inspect
   end
 
   def self.error_message_for(command)
