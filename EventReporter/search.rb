@@ -1,5 +1,9 @@
 class Search
-  def self.for(attribute, criteria)
-    puts "Here's a search for #{criteria} on #{attribute}"
+
+  def self.valid_parameters?(parameters)
+    parameters.count == 2
+  end
+  def self.for(parameters)
+    puts "Here's a search for #{parameters}"
   end
 end

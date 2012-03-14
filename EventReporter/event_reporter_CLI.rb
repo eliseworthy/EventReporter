@@ -1,107 +1,106 @@
 #Dependecies
+
 $LOAD_PATH << './'
 require 'csv'
 require 'attendee'
 require 'help'
 require 'search'
+require 'event_data_parser'
+require 'queue'
 
 #Class Definition
 
 class EventReporterCLI
+  EXIT_COMMANDS = ['quit', 'q', 'e', 'exit']
+  ALL_COMMANDS = {"load" => "loads a new file", 
+                  "help" => "shows a list of available commands",
+                  "queue" => "a set of data",
+                  "queue count" => "total items in the queue", 
+                  "queue clear" => "empties the queue",
+                  "queue print" => "prints to the queue", 
+                  "queue print by" => "prints the specified attribute",
+                  "queue save to" => "exports queue to a CSV", 
+                  "find" => "load the queue with matching records"}
+
   class << self
     attr_accessor :attendees
+  end
+
+  def self.prompt
+    printf "Enter command:"
+    gets.strip.split
+  end
+
+  def self.parse_user_inputs(inputs)
+    [ input.first.downcase, inputs[1..-1] ]
+  end
+
+  def self.valid_parameters_for_load?(parameters)
+    parameters.count == 1 && parameters[0] =~ /\.csv$/
+  end
+
+  def self.valid_parameters_for_queue?(parameters)
+    if !%w(count clear print save).include?(parameters[0])
+      false
+    elsif parameters[0] == "print" 
+      parameters.count == 1 || (parameters[1] == "by" && parameters.count == 3 )
+    elsif parameters[0] == "save"
+      parameters[1] == "to" && parameters.count == 3
+    else
+      true
+    end
+  end
+
+  def self.valid_parameters_for_help?(parameters)
+    parameters.empty? || valid_command?(parameters.join(" "))
+  end
+
+  def self.valid_command?(command)
+    ALL_COMMANDS.keys.include?(command)
+  end
+
+  def self.switch_by_command(command, parameters)
+    if command == "load" && valid_parameters_for_load?(parameters)
+        EventDataParser.load(parameters[0])
+    elsif command == "queue" && valid_parameters_for_queue?(parameters)
+        Queue.new.call(parameters)
+    elsif command == "help" && valid_parameters_for_help?(parameters)
+        Help.for(parameters)
+    elsif command == "find" && Search.valid_parameters?(parameters)
+        Search.for(parameters)
+    else
+      error_message_for(command)
+    end
   end
 
   def self.run
     puts "welcome!"
     command = ""
-    #load_this("event_attendees.csv")
-    
-    while command != "quit"
-      printf "enter command: "
+    load_attendees("event_attendees.csv")
 
-      input = gets.chomp
-      parts = input.split(" ")
-      command = parts[0].downcase
-      second_command = parts[1]
-      @input = input
-      @second_command = second_command
-      @attribute = parts[2]
+    until EXIT_COMMANDS.include?(command)
+      inputs = prompt
 
-      case command
-        when 'quit' then puts "Adios!"
-        when 'load' then load_this(second_command)
-        when 'help'
-          if second_command.nil?
-            help_list
-          else
-            help(second_command)
-          end
-        when 'find' then find(second_command, parts[2])
-        when 'queue' then 
-          if second_command == "save" && parts[3] != nil
-            queue_save(parts[3])
-          elsif second_command == "print" && parts[3] != nil
-            queue_print_by(parts[3])
-          else
-            queue(second_command)
-          end
-        else puts "That command is invalid."
+      if inputs.any?
+        command, parameters = parse_user_inputs(inputs)
+        switch_by_command(command, parameters)
+      else
+        puts "No command entered."
       end
     end
   end
 
-  def self.load_this(filename)
-    # This works - I just want to test with a small amount of data for a bit
-    # puts "You loaded #{filename}!"
-    # file = CSV.open(filename, :headers => true, :header_converters => :symbol)
-    # file.rewind
-    # attendees = file.collect { |line| Attendee.new(line) }
-    # puts attendees.inspect
+  def self.load_attendees(filename)
+    file = CSV.open(filename, :headers => true, :header_converters => :symbol)
+    file.rewind
+    attendees = file.collect { |line| Attendee.new(line) }
+    puts attendees.inspect
   end
 
-  def self.help_list
-  
-    puts "Here's a list of the commands:"
-    puts "load <filename>" 
-    puts "help"
-    puts "help <command name>" 
-    puts "find <attribute> <criteria>"
-    puts "queue count"
-    puts "queue clear"
-    puts "queue print"
-    puts "queue print by <attribute>"
-    puts "queue save to <filename>"
-
+  def self.error_message_for(command)
+    puts "Sorry, invalid parameters for #{command}"
   end
 
-  def self.help(command)
-    Help.for(@input)
-  end
-
-  def self.find(attribute, criteria)
-    Search.for(@attribute, @second_command)
-  end
-
-  def self.queue_print_by(attribute)
-    puts "You're asking to print by #{attribute}"
-  end
-
-  def self.queue_save(filename)
-    puts "You're asking to save the queue to #{filename}"
-  end
-
-  def self.queue(command)
-    if command == "count" 
-      puts "there are some number of things in your queue"
-    elsif command == "print" 
-      puts "I'm going to print the whole queue"
-    elsif command == "clear" 
-      puts "I'm clearing yo' queue"
-    else 
-      puts "Invalid queue command."
-    end
-  end
 end
 
 #Script
