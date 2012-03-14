@@ -6,7 +6,7 @@ class Search
   def self.for(parameters, attendees)
     @attendees_to_search = attendees
     @attendees_to_save = Queue.new
-      #go through each item in attendees_to_search
+
     puts "You're doing a search for #{parameters[1]} in category #{parameters[2]}" 
     
     @attendees_to_search.each do |attendee|     

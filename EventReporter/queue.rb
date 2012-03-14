@@ -1,8 +1,10 @@
 class Queue
 
-  # def initialize
-  #   @queue = []
-  # end
+  attr_accessor :returned_attendees
+
+  def initialize
+    @returned_attendees = []
+  end
 
   # trying to make the below work
   # @queue = [{:first_name => "john", :last_name => "smith"}, {:first_name => "sally", :last_name => "struthers"} ]

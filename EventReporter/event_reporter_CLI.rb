@@ -29,6 +29,8 @@ class EventReporterCLI
     self.queue = Queue.new
   end
 
+  #need to break out a command parser class
+
   def self.prompt
     printf "Enter command:"
     gets.strip.split

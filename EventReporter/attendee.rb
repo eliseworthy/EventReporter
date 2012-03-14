@@ -20,6 +20,7 @@ class Attendee
 
   def initialize(attributes)
     self.first_name = attributes[:first_name]
+    #need to call clean methods - self.phonenumber = clean_number(attribltes[:homephone])
     self.last_name = attributes[:last_name]
     self.email = attributes[:email]
     self.zipcode = attributes[:zipcode]
