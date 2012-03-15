@@ -1,7 +1,14 @@
 require 'ruby-debug'
-class Attendee 
+class Attendee
 
-  attr_accessor :first_name, :last_name, :email, :zipcode, :city, :state, :address, :homephone
+  attr_accessor :first_name,
+                :last_name,
+                :email,
+                :zipcode,
+                :city,
+                :state,
+                :address,
+                :homephone
 
   def initialize(attributes)
     self.first_name = attributes[:first_name]
@@ -11,8 +18,7 @@ class Attendee
     self.city = attributes[:city]
     self.state = attributes[:state]
     self.address = attributes[:street]
-    attributes[:homephone] = '' if attributes[:homephone].nil?
-    self.dirty_phone = attributes[:homephone]
+    self.dirty_phone = attributes[:homephone].to_s
   end
 
   def table_values
@@ -36,7 +42,7 @@ class Attendee
     dirty_phone = dirty_phone.scan(/\d/).join
     if dirty_phone.length == 10
       dirty_phone = dirty_phone
-    elsif dirty_phone.length == 11 && dirty_phone[0] == 1 
+    elsif dirty_phone.length == 11 && dirty_phone[0] == 1
        dirty_phone = dirty_phone[1..-1]
      else
       dirty_phone = "0000000000"

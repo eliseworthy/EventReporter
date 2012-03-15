@@ -9,7 +9,7 @@ require "event_reporter"
 
 class Start
   EXIT_COMMANDS = ['quit', 'q', 'e', 'exit']
-  
+
   def self.prompt
     printf "Enter command:"
     gets.strip.split
@@ -46,7 +46,7 @@ class Start
       inputs = prompt
 
       if inputs.any?
-        command, parameters = parse_user_inputs(inputs) 
+        command, parameters = parse_user_inputs(inputs)
         switch_by_command(command, parameters) unless EXIT_COMMANDS.include?(command)
       else
         puts "No command entered."
