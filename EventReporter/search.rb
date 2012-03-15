@@ -7,12 +7,13 @@ class Search
   def self.for(parameters, attendees)
     @attendees_to_search = attendees
     @attendees_to_save = []
+    @search_criteria = parameters[1..-1].join(" ")
 
-    puts "You're doing a search for #{parameters[1..-1].join(" ")} in category #{parameters[0]}"
+    puts "You're doing a search for #{@search_criteria} in #{parameters[0]}"
 
     @attendees_to_search.each do |attendee|
       value = attendee.send(parameters[0])
-      if value && value.downcase == parameters[1..-1].join(" ").downcase
+      if value && value.downcase == @search_criteria.downcase
         @attendees_to_save.push(attendee)
       end
     end

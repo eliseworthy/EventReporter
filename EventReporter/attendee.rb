@@ -10,6 +10,10 @@ class Attendee
                 :address,
                 :homephone
 
+  def phone_format(phone)
+    phone = "(#{phone[0..2]}) #{phone[3..5]}-#{phone[6..-1]}"
+  end
+
   def initialize(attributes)
     self.first_name = attributes[:first_name]
     self.last_name = attributes[:last_name]
@@ -40,6 +44,7 @@ class Attendee
 
   def dirty_phone=(dirty_phone)
     dirty_phone = dirty_phone.scan(/\d/).join
+
     if dirty_phone.length == 10
       dirty_phone = dirty_phone
     elsif dirty_phone.length == 11 && dirty_phone[0] == 1
@@ -47,7 +52,7 @@ class Attendee
      else
       dirty_phone = "0000000000"
     end
-    formatted_phone = "(#{dirty_phone[0..2]}) #{dirty_phone[3..5]}-#{dirty_phone[6..-1]}"
-    self.homephone = formatted_phone
+
+    self.homephone = phone_format(dirty_phone)
   end
 end

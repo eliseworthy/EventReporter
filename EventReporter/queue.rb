@@ -1,4 +1,5 @@
 class Queue
+  HEADER = "LAST NAME\tFIRST NAME\tEMAIL\tZIPCODE\tCITY\tSTATE\tADDRESS\tPHONE\n"
 
   attr_accessor :returned_attendees
 
@@ -71,7 +72,7 @@ class Queue
   end
 
   def print_to_screen
-    puts "LAST NAME\tFIRST NAME\tEMAIL\tZIPCODE\tCITY\tSTATE\tADDRESS\tPHONE\n"
+    puts HEADER
     @returned_attendees.each do |attendee|
       puts attendee.table_values.join("\t")
       puts "\n"
