@@ -37,9 +37,18 @@ class Queue
       puts  "The file has been saved to #{parameters[2]}"
     elsif parameters[0] == "print" && parameters[2].nil?
       print_to_screen    
-    elsif parameters[0] == "print"
+    elsif parameters[0] == "print" && [
+      "first_name", 
+      "last_name", 
+      "email", 
+      "zipcode", 
+      "city", 
+      "state", 
+      "address"].include? parameters[2]
       sort_by(parameters[2])
       print_to_screen
+    else
+      puts "Invalid command for queue"
     end
   end  
 
