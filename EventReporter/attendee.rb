@@ -1,16 +1,17 @@
+require 'ruby-debug'
 class Attendee 
 
-  attr_accessor :first_name, :last_name, :email, :zipcode, :city, :state, :address, :phone
+  attr_accessor :first_name, :last_name, :email, :zipcode, :city, :state, :address, :homephone
 
   def initialize(attributes)
     self.first_name = attributes[:first_name]
-    #need to call clean methods - self.phonenumber = clean_number(attribltes[:homephone])
     self.last_name = attributes[:last_name]
     self.email = attributes[:email_address]
     self.dirty_zipcode = attributes[:zipcode]
     self.city = attributes[:city]
     self.state = attributes[:state]
     self.address = attributes[:street]
+    attributes[:homephone] = '' if attributes[:homephone].nil?
     self.dirty_phone = attributes[:homephone]
   end
 
@@ -23,7 +24,7 @@ class Attendee
       city,
       state,
       address,
-      phone
+      homephone,
     ]
   end
 
@@ -41,6 +42,6 @@ class Attendee
       dirty_phone = "0000000000"
     end
     formatted_phone = "(#{dirty_phone[0..2]}) #{dirty_phone[3..5]}-#{dirty_phone[6..-1]}"
-    self.phone = formatted_phone
+    self.homephone = formatted_phone
   end
 end

@@ -44,7 +44,8 @@ class Queue
       "zipcode", 
       "city", 
       "state", 
-      "address"].include?(parameters[2])
+      "address",
+      "homephone"].include?(parameters[2])
       sort_by(parameters[2])
       print_to_screen
     else

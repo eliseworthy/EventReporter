@@ -3,7 +3,7 @@ class EventReporter
 
   def initialize(filename="event_attendees.csv")
     @queue = Queue.new
-    load(filename)
+    @all_attendees=[] 
   end
 
   def load(filename)

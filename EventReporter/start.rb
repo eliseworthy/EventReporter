@@ -20,7 +20,7 @@ class Start
   end
 
   def self.switch_by_command(command, parameters)
-    if command == "load" && EventDataParser.valid_parameters?(parameters)
+    if command == "load" #&& EventDataParser.valid_parameters?(parameters)
         @event_reporter.load(parameters[0])
     elsif command == "queue" && Queue.valid_parameters?(parameters)
         @event_reporter.queue.call(parameters)
