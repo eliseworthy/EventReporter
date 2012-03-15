@@ -27,7 +27,8 @@ class Start
     elsif command == "help" && Help.valid_parameters?(parameters)
         Help.for(parameters)
     elsif command == "find" && Search.valid_parameters?(parameters)
-        @event_reporter.queue.returned_attendees = Search.for(parameters, @event_reporter.all_attendees)
+        @search_items = Search.for(parameters, @event_reporter.all_attendees)
+        @event_reporter.queue.returned_attendees = @search_items
     else
       error_message_for(command)
     end
