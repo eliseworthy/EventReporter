@@ -54,7 +54,7 @@ class Queue
 
   def save(filename)
     output = CSV.open(filename, "w") do |row|
-      row << ["LAST NAME", "FIRST NAME", "EMAIL",  "ZIPCODE",  "CITY",  "STATE",  "ADDRESS"]
+      row << ["LAST NAME", "FIRST NAME", "EMAIL",  "ZIPCODE",  "CITY",  "STATE",  "ADDRESS", "PHONE"]
       @returned_attendees.each do |attendee|
         row << attendee.table_values
       end
@@ -62,7 +62,7 @@ class Queue
   end
 
   def print_to_screen
-    puts "LAST NAME\tFIRST NAME\tEMAIL\tZIPCODE\tCITY\tSTATE\tADDRESS\n"
+    puts "LAST NAME\tFIRST NAME\tEMAIL\tZIPCODE\tCITY\tSTATE\tADDRESS\nPHONE"
     @returned_attendees.each do |attendee|
       puts attendee.table_values.join("\t")
       puts "\n"
